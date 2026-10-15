@@ -1,0 +1,53 @@
+/* Verwaltung → Report: der Bericht als Dokument (Bildschirm wie Ausdruck auf einer DIN-A4-Seite) */
+.rp-bar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;margin:0 0 16px}
+.rp-bar .f{margin:0;display:grid;gap:4px}.rp-bar label{font-size:12px;color:var(--adm-t3)}
+.rp-bar select,.rp-bar input{min-width:0;max-width:220px}
+.rp-bar__dates{display:flex;align-items:center;gap:6px}
+.rp-doc{--rp-ink:var(--adm-ink);--rp-muted:var(--adm-t3);--rp-line:var(--adm-line);
+  max-width:820px;margin:0 auto 32px;background:var(--adm-card);color:var(--rp-ink);border-radius:14px;padding:36px 40px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 40px rgba(0,0,0,.07);display:grid;gap:18px}
+.rp-doc__head{border-bottom:1px solid var(--rp-line);padding-bottom:14px}
+.rp-kicker{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--rp-muted);font-weight:600}
+.rp-doc h2{margin:0;font-size:24px;letter-spacing:-.01em}
+.rp-sub{margin:4px 0 0;color:var(--rp-muted);font-size:13px}
+.rp-chip{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--adm-accent-bg);color:var(--adm-a-ink);font-size:12px;margin-left:4px}
+.rp-lead{font-size:17px;line-height:1.55;max-width:62ch;text-wrap:pretty}
+.rp-figs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rp-fig{border:1px solid var(--rp-line);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.rp-fig__label{font-size:12px;color:var(--rp-muted)}
+.rp-fig__value{font-size:22px;font-variant-numeric:tabular-nums}
+.rp-fig__chg{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.rp-fig__chg.is-up{color:#1A7240}.rp-fig__chg.is-down{color:#B42318}.rp-fig__chg.is-flat{color:var(--rp-muted)}
+.rp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 26px}
+.rp-sec--verlauf{grid-column:1 / -1}
+.rp-sec h3,.rp-tips h3{margin:0 0 4px;font-size:14px}
+.rp-sec p{margin:0 0 6px;font-size:13.5px;line-height:1.5;color:var(--rp-ink)}
+.rp-sec .cms-chart__table > summary{font-size:11px}
+.rp-list{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:3px;font-size:13px}
+.rp-list li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--rp-line);padding:2px 0}
+.rp-list b{font-variant-numeric:tabular-nums;font-weight:600}
+.rp-tips{background:var(--adm-accent-bg);border-radius:10px;padding:12px 16px}
+.rp-tips ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13.5px}
+.rp-foot{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--rp-muted);border-top:1px solid var(--rp-line);padding-top:10px}
+.rp-foot a{color:inherit}
+.rp-privacy{width:100%;font:inherit;font-size:13px}
+@media (max-width:760px){.rp-doc{padding:22px 18px}.rp-figs{grid-template-columns:repeat(2,minmax(0,1fr))}.rp-grid{grid-template-columns:1fr}}
+/* Ausdruck: nur der Bericht, eine DIN-A4-Seite */
+@media print{
+  @page{size:A4;margin:10mm 12mm}
+  html,body{background:#fff!important}
+  .adm-side,.adm-top,.adm-head,.adm-tabs,.adm-secnav,.adm-tabsel,.rp-bar,.adm-flash,.cms-chart__table,#adm-side,.adm-env{display:none!important}
+  .adm-main,.us-main,.adm-tabs-form--side{display:block!important;padding:0!important;margin:0!important;max-width:none!important;grid-template-columns:none!important}
+  .rp-doc{box-shadow:none;border-radius:0;padding:0;max-width:none;margin:0;gap:8px;background:#fff;color:#111;--rp-ink:#111;--rp-muted:#555;--rp-line:#ddd}
+  .rp-doc__head{padding-bottom:6px}.rp-doc h2{font-size:18px}.rp-sub{font-size:10.5px}
+  .rp-lead{font-size:12px;line-height:1.45;max-width:none}
+  .rp-figs{gap:6px}.rp-fig{padding:5px 8px}.rp-fig__label,.rp-fig__chg{font-size:9.5px}.rp-fig__value{font-size:15px}
+  .rp-grid{gap:8px 18px}
+  .rp-sec h3,.rp-tips h3{font-size:11.5px;margin-bottom:2px}
+  .rp-sec p{font-size:10px;line-height:1.4;margin-bottom:3px}
+  .rp-list{font-size:10px;gap:1px}
+  .rp-tips{padding:6px 10px}.rp-tips ul{font-size:10px}
+  .rp-foot{font-size:8.5px;padding-top:5px}
+  .rp-sec,.rp-tips,.rp-figs{break-inside:avoid}
+  .rp-sec .cms-chart__print{max-height:125px;width:auto;margin:0 auto}.rp-sec--verlauf .cms-chart__print{max-height:150px;width:100%;object-fit:contain}
+}

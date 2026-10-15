@@ -1,0 +1,11 @@
+{
+    "name": "klxm/studio-report",
+    "description": "KLXM Studio – Report: datensparsame Besucherauswertung ohne Cookies als gedeuteter Bericht (eine DIN-A4-Seite) – Seiten, Herkunft, Kampagnen, Geräte, Standorte (GeoIP), Ereignisse und Ziele",
+    "type": "klxm-studio-extension",
+    "license": "MIT",
+    "keywords": ["klxm-studio", "klxm-studio-extension", "analytics", "report", "privacy", "cookieless", "geoip", "dsgvo"],
+    "homepage": "https://studio.klxm.de",
+    "authors": [{ "name": "KLXM Crossmedia GmbH and contributors" }],
+    "require": { "php": ">=8.4.1", "maxmind-db/reader": "^1.12" },
+    "extra": { "klxm-studio": { "entry": "extension.php", "requires-core": ">=1.0.0" } }
+}
