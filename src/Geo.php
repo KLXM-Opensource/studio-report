@@ -53,6 +53,24 @@ final class Geo
         return [$country, mb_substr($region, 0, 80), mb_substr($city, 0, 80)];
     }
 
+    /** Englische Namen der Datenbank → deutsche (Bundesländer, österreichische Länder, wichtige Kantone), sonst unverändert */
+    private const DE = [
+        'Baden-Wurttemberg' => 'Baden-Württemberg', 'Baden-Württemberg' => 'Baden-Württemberg', 'Bavaria' => 'Bayern', 'Berlin' => 'Berlin', 'Brandenburg' => 'Brandenburg',
+        'Bremen' => 'Bremen', 'Hamburg' => 'Hamburg', 'Hesse' => 'Hessen', 'Lower Saxony' => 'Niedersachsen', 'Mecklenburg-Vorpommern' => 'Mecklenburg-Vorpommern',
+        'Mecklenburg-Western Pomerania' => 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia' => 'Nordrhein-Westfalen', 'Rhineland-Palatinate' => 'Rheinland-Pfalz',
+        'Saarland' => 'Saarland', 'Saxony' => 'Sachsen', 'Saxony-Anhalt' => 'Sachsen-Anhalt', 'Schleswig-Holstein' => 'Schleswig-Holstein', 'Thuringia' => 'Thüringen',
+        'Vienna' => 'Wien', 'Lower Austria' => 'Niederösterreich', 'Upper Austria' => 'Oberösterreich', 'Styria' => 'Steiermark', 'Tyrol' => 'Tirol', 'Carinthia' => 'Kärnten',
+        'Salzburg' => 'Salzburg', 'Vorarlberg' => 'Vorarlberg', 'Burgenland' => 'Burgenland', 'Zurich' => 'Zürich', 'Geneva' => 'Genf', 'Bern' => 'Bern', 'Basel-City' => 'Basel-Stadt',
+        'Lucerne' => 'Luzern', 'Grisons' => 'Graubünden', 'Ticino' => 'Tessin', 'Vaud' => 'Waadt', 'Munich' => 'München', 'Cologne' => 'Köln', 'Nuremberg' => 'Nürnberg',
+        'Hanover' => 'Hannover', 'Brunswick' => 'Braunschweig', 'Dusseldorf' => 'Düsseldorf', 'Moenchengladbach' => 'Mönchengladbach', 'Muenster' => 'Münster',
+    ];
+
+    /** Name in der Sprache der Verwaltung (Deutsch: Übersetzung der gängigen Namen) */
+    public static function name(string $name): string
+    {
+        return str_starts_with((string) \Core\I18n::locale(), 'de') ? (self::DE[$name] ?? $name) : $name;
+    }
+
     /** Datenbank des aktuellen (bzw. vorigen) Monats laden → Meldung */
     public static function download(): string
     {

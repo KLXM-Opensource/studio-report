@@ -238,11 +238,11 @@ final class Narrative
         $first = array_key_first($co);
         $text = [__('{p} % der Besuche kamen aus {country}.', ['p' => self::n($this->share('country', (string) $first)), 'country' => Report::countryName((string) $first)])];
         $rg = array_slice($this->cur['dims']['region'] ?? [], 0, 3, true);
-        if ($rg) $text[] = __('Die meisten aus {list}.', ['list' => self::join(array_map(fn($k) => explode('|', $k)[1] ?? $k, array_keys($rg)))]);
+        if ($rg) $text[] = __('Die meisten aus {list}.', ['list' => self::join(array_map(fn($k) => Geo::name(explode('|', $k)[1] ?? $k), array_keys($rg)))]);
         $ct = array_slice($this->cur['dims']['city'] ?? [], 0, 3, true);
-        if ($ct) $text[] = __('Häufigste Städte (ungefähr): {list}.', ['list' => self::join(array_map(fn($k) => explode('|', $k)[2] ?? $k, array_keys($ct)))]);
+        if ($ct) $text[] = __('Häufigste Städte (ungefähr): {list}.', ['list' => self::join(array_map(fn($k) => Geo::name(explode('|', $k)[2] ?? $k), array_keys($ct)))]);
         $list = [];
-        foreach (array_slice($this->cur['dims'][$rg ? 'region' : 'country'], 0, 5, true) as $k => [$a]) $list[] = [$rg ? (explode('|', $k)[1] ?? $k) : Report::countryName((string) $k), self::n($a)];
+        foreach (array_slice($this->cur['dims'][$rg ? 'region' : 'country'], 0, 5, true) as $k => [$a]) $list[] = [$rg ? Geo::name(explode('|', $k)[1] ?? $k) : Report::countryName((string) $k), self::n($a)];
         return ['id' => 'standorte', 'title' => __('Standorte'), 'text' => $text, 'list' => $list];
     }
 
