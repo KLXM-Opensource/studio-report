@@ -24,7 +24,7 @@ $privacy = __('Diese Website zählt Besuche ohne Cookies und ohne Speicher in Ih
 
 <?= AdminUi::group(__('GeoIP-Datenbank'), [
     AdminUi::row(__('Stand'), $updated ? e(fmt()->date($updated)) : '<span class="adm-badge adm-badge--adm-warn">' . e(__('fehlt')) . '</span>',
-      __('„IP to City Lite“ von DB-IP (CC BY 4.0), einmal je Installation, monatlich neu – per Cron: php bin/console report:geoip')),
+      __('„IP to City Lite“ von DB-IP (CC BY 4.0), einmal je Installation, monatlich neu über System → Geplante Aufgaben (report:geoip)')),
     AdminUi::row(__('Jetzt laden'), '<form method="post" action="' . e(url('/admin/report/einstellungen')) . '">' . csrf_field() . '<input type="hidden" name="do" value="geoip"><button class="adm-btn adm-btn--small" type="submit">' . e($updated ? __('Aktualisieren') : __('Laden')) . '</button></form>', __('Etwa 130 MB, dauert einen Moment.')),
 ], '') ?>
 

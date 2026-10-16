@@ -30,6 +30,11 @@ return [
     'license' => 'MIT',
     'provides' => ['Menüpunkt „Report“ (Bericht, Einstellungen)', 'Karte „Report“ in der Übersicht', 'Datenquellen für den Block „Diagramm“', 'Zählung /_report', 'Rechte „Report ansehen“, „Report einstellen“'],
     'commands' => ['report:rollup', 'report:geoip', 'report:selftest'],
+    // Geplante Aufgaben (Core\Cron, System → Geplante Aufgaben): laufen über den einen Cronjob der Installation
+    'schedule' => [
+        'rollup' => ['label' => 'Tage verdichten, Fristen anwenden', 'command' => 'report:rollup', 'cron' => '20 1 * * *', 'timeout' => 900],
+        'geoip' => ['label' => 'GeoIP-Datenbank aktualisieren (DB-IP Lite)', 'command' => 'report:geoip', 'cron' => '40 4 3 * *', 'scope' => 'installation', 'timeout' => 600],
+    ],
     'boot' => function (Core\Extension $x): void {
         $x->feature(Report::FEATURE, 'Report: Besucher datensparsam auswerten (ohne Cookies)', [Report::PERM, 'report.manage'], false);
         $x->permissions('Report', [Report::PERM => 'Report ansehen', 'report.manage' => 'Report einstellen (Standort, Ausschlüsse, GeoIP)']);
@@ -78,9 +83,9 @@ return [
         $x->docs('technical', ['report' => ['title' => 'Report (Erweiterung): Besucher ohne Cookies', 'part' => 3, 'after' => 'live', 'file' => __DIR__ . '/docs/technical.php']]);
 
         $x->health(fn(): array => Report::on() && Report::config()['geo'] !== 'off' && !Klxm\Report\Geo::available()
-            ? [__('Report: GeoIP-Datenbank fehlt – php bin/console report:geoip (monatlich per Cron)') => null] : []);
+            ? [__('Report: GeoIP-Datenbank fehlt – System → Geplante Aufgaben → „GeoIP-Datenbank aktualisieren“ → Jetzt ausführen') => null] : []);
 
-        $x->command('report:rollup', 'Report: abgeschlossene Tage verdichten, Fristen anwenden (täglich per Cron)', function (array $args): int {
+        $x->command('report:rollup', 'Report: abgeschlossene Tage verdichten, Fristen anwenden (geplante Aufgabe, täglich)', function (array $args): int {
             $r = Query::rollup();
             echo "  {$r['days']} Tage verdichtet, {$r['raw_deleted']} Rohdaten und {$r['daily_deleted']} alte Tagessummen gelöscht\n";
             return 0;

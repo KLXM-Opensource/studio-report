@@ -10,7 +10,7 @@ use MaxMind\Db\Reader;
 /**
  * Standort aus der IP-Adresse – nur im Moment des Aufrufs, gespeichert werden Land, Bundesland/Region und Stadt, nie die IP.
  * Datenbank: „IP to City Lite“ von DB-IP (CC BY 4.0, ohne Konto, monatlich neu) im MaxMind-Format, einmal je Installation unter
- * storage/report-geo/. Laden/aktualisieren: php bin/console report:geoip (Cron monatlich). Quellenangabe im Report: „IP Geolocation by DB-IP“.
+ * storage/report-geo/. Laden/aktualisieren: php bin/console report:geoip (geplante Aufgabe, monatlich). Quellenangabe im Report: „IP Geolocation by DB-IP“.
  * Stadt ist ungefähr (Mobilfunk: oft Ort des Netzknotens); Auflösung einstellbar: aus, Land, Region, Stadt.
  */
 final class Geo

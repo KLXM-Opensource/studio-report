@@ -23,7 +23,7 @@ php bin/console report:geoip                # GeoIP-Datenbank (≈ 130 MB, einma
 ```
 
 Aktivieren: Administration → Funktionen & Erweiterungen (Erweiterung und Funktion „Report“, Standard aus).
-Cron: täglich `php bin/console report:rollup --all`, monatlich `php bin/console report:geoip`.
+Geplante Aufgaben (Manifest `schedule`, Kern: System → Geplante Aufgaben, ein Cronjob `php bin/console cron:run`): `report:rollup` täglich auf jeder Website mit Report, `report:geoip` monatlich einmal je Installation.
 
 ## Datenschutz
 
