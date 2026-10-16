@@ -11,7 +11,8 @@ keine Profile, keine Wege über mehrere Tage, keine Daten an Dritte.
 - Gerät, Browser, System, Sprache, Standort (Land, Bundesland, Stadt – DB-IP Lite, einstellbar bis „kein Standort“)
 - Aktionen: Formular abgeschickt, Download, Link nach außen, E-Mail-/Telefon-Link, eigene per `data-report="Name"` oder `window.cmsReport('Name')`
 - Ziele je Kampagne (z. B. Anfragen aus dem Newsletter)
-- **Report**: Zeitraum und Filter wählen, Bericht in verständlicher Sprache mit Vergleich, Kennzahlen, Diagrammen und Hinweisen; Drucken/PDF auf einer Seite
+- **Report**: Zeitraum und Filter wählen, Bericht in verständlicher Sprache im Stil eines Magazins (Schlagzeile, Vorspann, Kennzahlen, Diagramme, Hinweise); Drucken auf einer Seite, **PDF herunterladen** über `Core\Pdf` (mit Paket `klxm/studio-pdf`)
+- **Zahlen**: klassische Statistik zum Durchklicken – Kennzahlen, Verlauf, Tabellen mit Anteil und Veränderung, Klick auf eine Zeile filtert
 - Kachel und Karte in der Übersicht, Datenquellen für den Block „Diagramm“ (nur Summen), Textbaustein für die Datenschutzerklärung
 
 ## Installation

@@ -1,11 +1,18 @@
 <?php /** Handbuch · Kapitel „Report“ (Erweiterung report) */ ?>
-  <p class="lead">Der <b>Report</b> zeigt, wie Ihre Website genutzt wird – nicht als Zahlenwand, sondern als kurzer Bericht in Worten auf einer Seite: was gut lief, woher die Besucher kamen, welche Kampagne etwas gebracht hat und was Sie tun können.</p>
+  <p class="lead">Der <b>Report</b> zeigt, wie Ihre Website genutzt wird – als kurzer Bericht in Worten auf einer Seite (was gut lief, woher die Besucher kamen, welche Kampagne etwas gebracht hat, was Sie tun können) und, für alle, die selbst nachsehen möchten, als <b>Zahlen</b> zum Durchklicken.</p>
   <h3>Report ansehen</h3>
   <ul>
     <li>Menü <b>Report</b>: oben Zeitraum (letzte 7 oder 30 Tage, dieser oder letzter Monat, 90 Tage, dieses Jahr, eigener Zeitraum) und Filter (Seite, Herkunft, Kampagne, Gerät, Land).</li>
     <li>Der Bericht vergleicht immer mit dem gleich langen Zeitraum davor: „deutlich mehr (+23 %)“ heißt, dass es im Vergleich klar mehr waren.</li>
-    <li><b>Drucken / als PDF</b> ergibt genau eine DIN-A4-Seite – zum Ablegen oder Weitergeben.</li>
+    <li>Der <b>Bericht</b> ist gesetzt wie eine Magazinseite: Schlagzeile, kurzer Vorspann, die wichtigsten Zahlen groß, ein hervorgehobener Satz und die Abschnitte Verlauf, Inhalte, Herkunft, Geräte, Standorte und Aktionen.</li>
+    <li><b>PDF herunterladen</b> erzeugt daraus eine DIN-A4-Seite als Datei – zum Ablegen oder Weitergeben, mit allen Diagrammen (hell, auch wenn die Verwaltung dunkel eingestellt ist). <b>Drucken</b> ergibt ebenfalls eine Seite. Der Knopf „PDF herunterladen“ erscheint, sobald auf dem Server die PDF-Engine installiert ist (Paket „PDF-Engine (dompdf)“).</li>
     <li>Filter gelten für die letzten 30 Tage; ältere Zeiträume liegen nur als Tagessummen vor.</li>
+  </ul>
+  <h3>Zahlen zum Durchklicken</h3>
+  <ul>
+    <li><b>Report → Zahlen</b> zeigt dieselben Daten als klassische Statistik: oben sechs Kennzahlen (Besucher, Besuche, Seitenaufrufe, Absprungrate, Zeit je Seite, Seiten je Besuch) mit Veränderung zum Zeitraum davor. Ein Klick auf eine Kennzahl zeigt deren Verlauf je Tag.</li>
+    <li>Darunter Tabellen: Seiten, Einstiegsseiten, Herkunft, verweisende Websites, Kampagnen, Geräte, Browser, Betriebssysteme, Sprachen, Länder, Regionen, Städte und Aktionen – jeweils mit Anteil und Veränderung. „Alle … anzeigen“ öffnet die ganze Liste.</li>
+    <li><b>Klick auf eine Seite, eine Herkunft, eine Kampagne, ein Gerät oder ein Land</b> filtert alles danach – z. B. „Suchmaschinen“: Welche Seiten finden Besucher über Google? Gesetzte Filter stehen als Marken oben und lassen sich mit einem Klick wieder entfernen. Sie gelten auch im Bericht.</li>
   </ul>
   <h3>Was gezählt wird – und was nicht</h3>
   <ul>

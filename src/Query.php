@@ -90,7 +90,7 @@ final class Query
 
     /**
      * Daten eines Zeitraums: Summen je Dimension, Verlauf je Tag.
-     * @return array{from: string, to: string, days: array<string, array{pv:int, uv:int}>, dims: array<string, array<string, array{0:int,1:int}>>, filtered: bool, limited: bool}
+     * @return array{from: string, to: string, days: array<string, array{pv:int, uv:int, visits:int, bounces:int, ds:int, dn:int}>, dims: array<string, array<string, array{0:int,1:int}>>, filtered: bool, limited: bool}
      */
     public static function period(string $from, string $to, array $filter = []): array
     {
@@ -104,9 +104,11 @@ final class Query
         for ($t = strtotime($from); $t <= strtotime($to); $t += 86400) {
             $day = date('Y-m-d', $t);
             $rows = $daily[$day] ?? ($day >= self::rawStart() ? self::dayFromRaw($day, $filter) : []);
-            $out['days'][$day] = ['pv' => 0, 'uv' => 0];
+            $out['days'][$day] = ['pv' => 0, 'uv' => 0, 'visits' => 0, 'bounces' => 0, 'ds' => 0, 'dn' => 0];
             foreach ($rows as [$dim, $k, $a, $b]) {
-                if ($dim === 'total') $out['days'][$day] = ['pv' => $a, 'uv' => $b];
+                if ($dim === 'total') { $out['days'][$day]['pv'] = $a; $out['days'][$day]['uv'] = $b; }
+                elseif ($dim === 'visits') { $out['days'][$day]['visits'] = $a; $out['days'][$day]['bounces'] = $b; }
+                elseif ($dim === 'dur') { $out['days'][$day]['ds'] = $a; $out['days'][$day]['dn'] = $b; }
                 $cur = $out['dims'][$dim][$k] ?? [0, 0];
                 $out['dims'][$dim][$k] = [$cur[0] + $a, $cur[1] + $b];
             }
@@ -122,6 +124,18 @@ final class Query
         [$pv, $uv] = $g('total'); [$visits, $bounces] = $g('visits'); [$ds, $dn] = $g('dur');
         return ['pv' => $pv, 'uv' => $uv, 'visits' => $visits, 'bounce' => $visits ? round($bounces / $visits * 100) : null,
             'dur' => $dn ? (int) round($ds / $dn) : null, 'ppv' => $visits ? round($pv / $visits, 1) : null];
+    }
+
+    /** Wert einer Kennzahl für einen Tag (Zahlen-Ansicht): uv, visits, pv, bounce (%), dur (s), ppv */
+    public static function metric(array $d, string $m): ?float
+    {
+        return match ($m) {
+            'visits' => (float) $d['visits'], 'pv' => (float) $d['pv'],
+            'bounce' => $d['visits'] ? round($d['bounces'] / $d['visits'] * 100, 1) : null,
+            'dur' => $d['dn'] ? round($d['ds'] / $d['dn']) : null,
+            'ppv' => $d['visits'] ? round($d['pv'] / $d['visits'], 2) : null,
+            default => (float) $d['uv'],
+        };
     }
 
     /** Zeitraum aus Auswahl: 7, 30, monat, vormonat, quartal, jahr, frei (von/bis) → [von, bis, Vorzeitraum von, bis] */

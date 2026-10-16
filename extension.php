@@ -23,12 +23,12 @@ use Klxm\Report\Report;
 return [
     'name' => 'report',
     'label' => 'Report – Besucher datensparsam auswerten',
-    'version' => '0.1.0',
+    'version' => '0.2.0',
     'requires' => '>=1.0.0',
     'description' => 'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – eine DIN-A4-Seite je Zeitraum.',
     'author' => 'KLXM Crossmedia GmbH and contributors',
     'license' => 'MIT',
-    'provides' => ['Menüpunkt „Report“ (Bericht, Einstellungen)', 'Karte „Report“ in der Übersicht', 'Datenquellen für den Block „Diagramm“', 'Zählung /_report', 'Rechte „Report ansehen“, „Report einstellen“'],
+    'provides' => ['Menüpunkt „Report“ (Bericht, Zahlen, PDF, Einstellungen)', 'Karte „Report“ in der Übersicht', 'Datenquellen für den Block „Diagramm“', 'Zählung /_report', 'Rechte „Report ansehen“, „Report einstellen“'],
     'commands' => ['report:rollup', 'report:geoip', 'report:selftest'],
     // Geplante Aufgaben (Core\Cron, System → Geplante Aufgaben): laufen über den einen Cronjob der Installation
     'schedule' => [
@@ -45,6 +45,8 @@ return [
             $r->post(Report::ENDPOINT, [Collect::class, 'hit']);
             $c = Klxm\Report\AdminController::class;
             $r->get('/admin/report', [$c, 'index'], Report::PERM);
+            $r->get('/admin/report/zahlen', [$c, 'numbers'], Report::PERM);
+            $r->post('/admin/report/pdf', [$c, 'pdf'], Report::PERM);
             $r->get('/admin/report/einstellungen', [$c, 'settings'], 'report.manage');
             $r->post('/admin/report/einstellungen', [$c, 'save'], 'report.manage');
         });

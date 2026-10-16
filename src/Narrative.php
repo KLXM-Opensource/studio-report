@@ -8,7 +8,8 @@ namespace Klxm\Report;
 /**
  * Der Report in Worten: Zahlen werden verglichen (Vorzeitraum), eingeordnet und in verständliche Sätze gefasst – nach festen
  * Regeln, ohne KI (nachvollziehbar, in jeder Verwaltungssprache über __()). Ergebnis für views/admin/report.php:
- *   lead (2–3 Sätze), figures (Kennzahlen mit Veränderung), sections (Titel, Text, Diagramm, Liste), tips (Hinweise).
+ *   headline (Schlagzeile), kicker (Ausgabe, z. B. „Oktober 2026“), lead (2–3 Sätze), highlight (hervorgehobener Satz),
+ *   figures (Kennzahlen mit Veränderung), sections (Titel, Text, Diagramm, Liste), tips (Hinweise).
  */
 final class Narrative
 {
@@ -16,6 +17,8 @@ final class Narrative
     private array $prev;
     private array $t;
     private array $pt;
+    /** @var list<array{0:int,1:string}> Kandidaten für den hervorgehobenen Satz [Gewicht, Satz] */
+    private array $pulls = [];
 
     public function __construct(array $cur, array $prev)
     {
@@ -91,10 +94,48 @@ final class Narrative
     public function build(): array
     {
         $t = $this->t; $pt = $this->pt;
-        if (!$t['pv']) return ['empty' => true, 'lead' => [__('In diesem Zeitraum wurden keine Besuche gezählt.')], 'figures' => [], 'sections' => [], 'tips' => []];
-        return ['empty' => false, 'lead' => $this->lead(), 'figures' => $this->figures(), 'sections' => array_values(array_filter([
-            $this->course(), $this->content(), $this->sources(), $this->devices(), $this->places(), $this->events(),
-        ])), 'tips' => $this->tips()];
+        $kicker = self::edition($this->cur['from'], $this->cur['to']);
+        if (!$t['pv']) return ['empty' => true, 'kicker' => $kicker, 'headline' => __('Noch keine Besuche gezählt'), 'highlight' => null,
+            'lead' => [__('In diesem Zeitraum wurden keine Besuche gezählt.')], 'figures' => [], 'sections' => [], 'tips' => []];
+        $sections = array_values(array_filter([$this->course(), $this->content(), $this->sources(), $this->devices(), $this->places(), $this->events()]));
+        usort($this->pulls, fn($a, $b) => $b[0] <=> $a[0]);
+        return ['empty' => false, 'kicker' => $kicker, 'headline' => $this->headline(), 'lead' => $this->lead(), 'highlight' => $this->pulls[0][1] ?? null,
+            'figures' => $this->figures(), 'sections' => $sections, 'tips' => $this->tips()];
+    }
+
+    /** Ausgabe: ganzer Monat → „Oktober 2026“, sonst der Zeitraum */
+    public static function edition(string $from, string $to): string
+    {
+        $monthEnd = date('Y-m-t', strtotime($from));
+        if (substr($from, 8) === '01' && ($to === $monthEnd || ($to === date('Y-m-d') && substr($to, 0, 7) === substr($from, 0, 7))))
+            return (string) preg_replace('~^\d+\.?\s+~u', '', self::date($from, 'long'));
+        return self::rangeLabel($from, $to);
+    }
+
+    /** Schlagzeile: Richtung der Besucherzahl und – falls deutlich – der Treiber (Kanal, Anfragen) */
+    private function headline(): string
+    {
+        $t = $this->t; $pt = $this->pt;
+        if (!$pt['uv']) return __('Der erste Überblick: {n} Besucher', ['n' => self::n($t['uv'])]);
+        $p = self::pct($t['uv'], $pt['uv']) ?? 0.0;
+        $main = $p >= 20 ? __('Deutlich mehr Besucher') : ($p >= 5 ? __('Mehr Besucher') : ($p <= -20 ? __('Deutlich weniger Besucher') : ($p <= -5 ? __('Weniger Besucher') : __('Stabile Besucherzahlen'))));
+        // Treiber: größte Veränderung eines Kanals in Richtung der Gesamtentwicklung
+        $best = null; $bestDiff = 0;
+        foreach (array_unique(array_merge(array_keys($this->cur['dims']['channel'] ?? []), array_keys($this->prev['dims']['channel'] ?? []))) as $k) {
+            $d = ($this->cur['dims']['channel'][$k][0] ?? 0) - ($this->prev['dims']['channel'][$k][0] ?? 0);
+            if (($p >= 0 ? $d : -$d) > $bestDiff) { $bestDiff = abs($d); $best = (string) $k; }
+        }
+        $forms = $this->eventCount(['Formular abgeschickt']);
+        $formsBefore = (int) ($this->prev['dims']['event']['Formular abgeschickt'][0] ?? 0);
+        $driver = '';
+        if ($forms >= 2 && $forms > $formsBefore * 1.2) $driver = __('mehr Anfragen');
+        elseif ($best !== null && abs($p) >= 5 && $bestDiff >= max(5, $t['visits'] * 0.05)) {
+            $driver = $p > 0
+                ? (['search' => __('Suchmaschinen bringen mehr'), 'social' => __('soziale Netzwerke bringen mehr'), 'campaign' => __('Kampagnen wirken'),
+                    'referral' => __('andere Websites verweisen öfter'), 'direct' => __('mehr direkte Besuche')][$best] ?? '')
+                : __('Rückgang vor allem {channel}', ['channel' => self::channelPhrase($best)]);
+        }
+        return $driver !== '' ? $main . ' – ' . $driver : $main;
     }
 
     private function lead(): array
@@ -168,6 +209,7 @@ final class Narrative
         $keys = array_keys($top);
         $first = $keys[0];
         $text = [__('Am häufigsten aufgerufen wurde „{page}“ ({p} % aller Seitenaufrufe).', ['page' => self::pageName($first), 'p' => self::n($this->share('page', $first))])];
+        $this->pulls[] = [1, $text[0]];
         if (count($keys) > 2) $text[] = __('Dahinter folgen „{a}“ und „{b}“.', ['a' => self::pageName($keys[1]), 'b' => self::pageName($keys[2])]);
         // Aufsteiger: größte Zunahme gegenüber dem Zeitraum davor (mindestens 10 Aufrufe)
         $rise = null; $rp = 0;
@@ -176,9 +218,12 @@ final class Narrative
             if ($a >= 10 && $before > 0 && ($p = ($a - $before) / $before * 100) > max(50, $rp)) { $rise = $k; $rp = $p; }
             if ($a >= 10 && $before === 0 && !$rise && ($this->prev['dims']['total'][''][0] ?? 0) > 0) { $rise = $k; $rp = INF; }
         }
-        if ($rise && $rise !== $first) $text[] = is_infinite($rp)
-            ? __('Neu gefragt: „{page}“ mit {n} Aufrufen.', ['page' => self::pageName($rise), 'n' => self::n($this->cur['dims']['page'][$rise][0])])
-            : __('Aufsteiger: „{page}“ wurde {p} % häufiger aufgerufen als zuvor.', ['page' => self::pageName($rise), 'p' => self::n($rp)]);
+        if ($rise && $rise !== $first) {
+            $text[] = is_infinite($rp)
+                ? __('Neu gefragt: „{page}“ mit {n} Aufrufen.', ['page' => self::pageName($rise), 'n' => self::n($this->cur['dims']['page'][$rise][0])])
+                : __('Aufsteiger: „{page}“ wurde {p} % häufiger aufgerufen als zuvor.', ['page' => self::pageName($rise), 'p' => self::n($rp)]);
+            $this->pulls[] = [2, end($text)];
+        }
         return ['id' => 'inhalte', 'title' => __('Inhalte'), 'text' => $text,
             'chart' => ['type' => 'hbar', 'labels' => array_map([self::class, 'pageName'], $keys), 'series' => [['name' => __('Aufrufe'), 'data' => array_column(array_values($top), 0)]],
                 'height' => 40 * count($keys) + 40, 'description' => __('Die meistbesuchten Seiten')]];
@@ -205,6 +250,7 @@ final class Narrative
             $text[] = $goals
                 ? __('Die Kampagne „{c}“ brachte {n} Besuche – daraus {goals}.', ['c' => $name, 'n' => self::n($a), 'goals' => self::join($goals)])
                 : __('Die Kampagne „{c}“ brachte {n} Besuche.', ['c' => $name, 'n' => self::n($a)]);
+            if ($goals) $this->pulls[] = [3, end($text)];
         }
         return ['id' => 'herkunft', 'title' => __('Herkunft'), 'text' => $text,
             'chart' => ['type' => 'donut', 'labels' => array_map(fn($k) => Report::label('channel', (string) $k), array_keys($ch)), 'series' => [['name' => __('Besuche'), 'data' => array_column(array_values($ch), 0)]],

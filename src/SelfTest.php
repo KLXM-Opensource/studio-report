@@ -56,6 +56,16 @@ final class SelfTest
             $eq('Zeitraum aus Tagessummen', Query::totals($p)['visits'], 3);
             $r = (new Narrative($p, Query::period(date('Y-m-d', strtotime('-2 days')), date('Y-m-d', strtotime('-2 days')))))->build();
             $eq('Bericht: Text und Abschnitte', [$r['empty'], count($r['lead']) >= 1, count($r['figures']), in_array('herkunft', array_column($r['sections'], 'id'), true)], [false, true, 4, true]);
+            $eq('Bericht: Schlagzeile und Ausgabe', [$r['headline'] !== '', $r['kicker'] !== ''], [true, true]);
+            $eq('Ausgabe: ganzer Monat als „Monat Jahr“', Narrative::edition('2026-09-01', '2026-09-30'), (string) preg_replace('~^\d+\.?\s+~u', '', fmt()->date('2026-09-01', 'long')));
+            $nr = Numbers::rows($p, ['dims' => []], 'campaign');
+            $eq('Zahlen: Zeile mit Filterwert und Anteil', [$nr['rows'][0]['filter'] ?? null, (int) round($nr['rows'][0]['share'] ?? 0), array_key_exists('change', $nr['rows'][0] ?? []) ? $nr['rows'][0]['change'] : 'x'], ['herbst', 100, null]);
+            $eq('Zahlen: Kennzahlen je Tag', [Query::metric($p['days'][$d0], 'bounce'), Query::metric($p['days'][$d0], 'ppv'), Query::metric($p['days'][$d0], 'uv')], [66.7, 1.33, 3.0]);
+            $eq('Zahlen: kein Filter für Browser', Numbers::filterValue('browser', 'Safari'), null);
+            if (\Core\Pdf::available()) {
+                $html = \Core\Theme::capture(dirname(__DIR__) . '/views/pdf/report.php', ['report' => $r, 'charts' => [], 'from' => $d0, 'to' => $d0, 'pfrom' => $d0, 'pto' => $d0, 'filter' => [], 'cur' => $p]);
+                $eq('PDF des Berichts', str_starts_with(\Core\Pdf::render($html), '%PDF-'), true);
+            }
             [$f, $t] = Query::range('vormonat');
             $eq('Zeitraum „Letzter Monat“', [$f, $t], [date('Y-m-01', strtotime('first day of last month')), date('Y-m-t', strtotime('first day of last month'))]);
         } finally {
