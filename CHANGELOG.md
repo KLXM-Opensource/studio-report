@@ -1,5 +1,10 @@
 # Changelog – Report
 
+## 0.2.1
+
+- Sicherheit: Zählung nur von der eigenen Website (`Sec-Fetch-Site`), höchstens 600 Aufrufe je Anschluss und Stunde (IP nur als HMAC – eine wechselnde Browserkennung umgeht die Grenze nicht mehr) und 200.000 je Website und Tag.
+- Tages-Salz: wird gleichzeitig nur einmal angelegt; Salze früherer Tage löscht auch die nächtliche Verdichtung (`report:rollup`), nicht erst der erste Besuch.
+
 ## 0.2.0
 
 - Bericht im Stil eines Magazins, ganz in Lato (Black für Schlagzeile und Rubriken, Light für Zahlen und Zitat): Ausgabe („Oktober 2026“), Schlagzeile nach festen Regeln („Deutlich mehr Besucher – Kampagnen wirken“), Vorspann, große Kennzahlen, hervorgehobener Satz, Abschnitte in zwei Spalten, nummerierte Tipps und „Die Zahlen dazu“ (kompakte Tabellen). Druck und PDF auf höchstens zwei DIN-A4-Seiten. Das PDF ist gesetzt wie eine kleine Zeitung: Zeitungskopf mit Ausgabe, große Leitzahl, Zitat, Seite 2 „Im Detail“ mit Tipps im dunklen Kasten und „Die Zahlen dazu“, Seitenzahlen.

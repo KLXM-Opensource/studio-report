@@ -71,6 +71,7 @@ final class Query
         $db = Report::db();
         $done = (string) ($db->fetchValue("SELECT v FROM report_meta WHERE k = 'rolled'") ?: '');
         $today = date('Y-m-d');
+        Report::dropSalts($today);
         $n = 0;
         foreach ($db->fetchAll('SELECT DISTINCT day FROM report_hits WHERE day < ? AND day > ? ORDER BY day', [$today, $done]) as $r) {
             $day = (string) $r['day'];

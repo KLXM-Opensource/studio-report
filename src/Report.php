@@ -97,11 +97,22 @@ final class Report
     {
         $f = self::dir() . '/salt-' . $day;
         if (!is_file($f)) {
-            foreach (glob(self::dir() . '/salt-*') ?: [] as $old) if (basename($old) !== 'salt-' . $day) @unlink($old);
-            @file_put_contents($f, bin2hex(random_bytes(32)), LOCK_EX);
-            @chmod($f, 0600);
+            self::dropSalts($day);
+            // „x“: nur anlegen, wenn es noch keins gibt – zwei gleichzeitige erste Aufrufe bekommen dasselbe Salz
+            if ($fh = @fopen($f, 'x')) {
+                fwrite($fh, bin2hex(random_bytes(32)));
+                fclose($fh);
+                @chmod($f, 0600);
+            }
         }
         return (string) @file_get_contents($f);
+    }
+
+    /** Salze anderer Tage löschen (auch täglich per report:rollup, damit ohne Besuche kein altes Salz liegen bleibt) */
+    public static function dropSalts(?string $keep = null): void
+    {
+        $keep ??= date('Y-m-d');
+        foreach (glob(self::dir() . '/salt-*') ?: [] as $old) if (basename($old) !== 'salt-' . $keep) @unlink($old);
     }
 
     /** Besucher-Kennung für einen Tag: nicht umkehrbar, am nächsten Tag ohne Bezug zur alten */

@@ -18,10 +18,16 @@ use Core\Http\Response;
  */
 final class Collect
 {
+    /** Höchstens so viele Seitenaufrufe je Website und Tag (Schutz vor Fluten der Statistik) */
+    public const DAY_MAX = 200000;
+
     public function hit(Request $r): Response
     {
         $ok = new Response('', 204, ['Cache-Control' => 'no-store']);
         if (!Report::on()) return $ok;
+        // Nur vom eigenen Skript auf der Website (Browser setzen Sec-Fetch-Site; fehlt es, zählt die Begrenzung unten)
+        $fetchSite = strtolower((string) ($r->server['HTTP_SEC_FETCH_SITE'] ?? ''));
+        if ($fetchSite !== '' && $fetchSite !== 'same-origin') return $ok;
         $raw = (string) file_get_contents('php://input', false, null, 0, 4096);
         $d = json_decode($raw, true);
         if (!is_array($d)) return $ok;
@@ -68,8 +74,14 @@ final class Collect
             return;
         }
         if ($type !== 'pv') return;
-        // Missbrauch begrenzen: höchstens 300 Aufrufe je Besucher und Tag
+        // Missbrauch begrenzen: höchstens 300 Aufrufe je Besucher und Tag, 600 je Anschluss und Stunde (IP nur als HMAC,
+        // wechselnde Browserkennung hilft also nicht) und ein Tageslimit für die ganze Website
         if ((int) $db->fetchValue('SELECT COUNT(*) FROM report_hits WHERE vh = ? AND day = ?', [$vh, $day]) >= 300) return;
+        if ((int) $db->fetchValue('SELECT COUNT(*) FROM report_hits WHERE day = ?', [$day]) >= self::DAY_MAX) return;
+        $limiter = new \Core\RateLimiter(app()->db);
+        $ipKey = 'report:' . substr(hash_hmac('sha256', $r->ip(), app()->key()), 0, 32);
+        if ($limiter->tooMany($ipKey, 600, 3600)) return;
+        $limiter->hit($ipKey);
 
         $newVisit = !$last || $now - (int) $last['ts'] > Report::VISIT_GAP;
         $visit = $newVisit ? (int) ($last['visit'] ?? 0) + 1 : (int) $last['visit'];
