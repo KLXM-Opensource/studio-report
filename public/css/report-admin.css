@@ -1,4 +1,4 @@
-/* Verwaltung → Report: Bericht im Stil eines Magazins (Bildschirm wie Ausdruck auf einer DIN-A4-Seite) und Zahlen.
+/* Verwaltung → Report: Bericht im Stil eines Magazins (Ausdruck auf höchstens zwei DIN-A4-Seiten) und Zahlen.
    Ganz in Lato (Kern: 300–900): Black für Schlagzeile und Rubriken, Light für große Zahlen und den hervorgehobenen Satz. */
 .rp-bar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;margin:0 0 16px}
 .rp-bar .f{margin:0;display:grid;gap:4px}.rp-bar label{font-size:12px;color:var(--adm-t3)}
@@ -39,6 +39,15 @@
 .rp-tips{background:var(--adm-accent-bg);border-radius:10px;padding:14px 18px}
 .rp-tips h3{border-bottom-color:color-mix(in srgb,var(--rp-accent) 25%,transparent)}
 .rp-tips ol{margin:0;padding-left:20px;display:grid;gap:5px;font-size:14px;line-height:1.5}
+.rp-appendix__h{margin:6px 0 10px;font-size:22px;font-weight:900;letter-spacing:-.01em;color:var(--rp-ink)}
+.rp-appendix__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 30px;align-items:start}
+.rp-num{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.rp-num th{text-align:right;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rp-muted);font-weight:700;padding:0 0 5px;border-bottom:1px solid var(--rp-ink)}
+.rp-num th:first-child,.rp-num td:first-child{text-align:left}
+.rp-num td{text-align:right;padding:4px 0;border-bottom:1px solid var(--rp-line);white-space:nowrap}
+.rp-num td:first-child{white-space:normal;padding-right:10px;overflow-wrap:break-word}
+.rp-num td + td{padding-left:10px}
+.rp-grid--rest{margin-top:-2px}
 .rp-foot{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--rp-muted);border-top:1px solid var(--rp-line);padding-top:10px}
 .rp-foot a{color:inherit}
 .rp-privacy{width:100%;font:inherit;font-size:13px}
@@ -81,24 +90,27 @@
 @media (max-width:1100px){.rz-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:760px){.rz-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rz-cards{grid-template-columns:1fr}.rz-table td,.rz-table th{padding-inline:12px}}
 
-/* ------------------------------------------------------------------ Ausdruck: nur der Bericht, eine DIN-A4-Seite */
+/* ------------------------------------------------------------------ Ausdruck: nur der Bericht, höchstens zwei DIN-A4-Seiten
+   Seite 1: Kopf bis zu den ersten beiden Abschnitten; Seite 2: übrige Abschnitte, Tipps, „Die Zahlen dazu“ */
 @media print{
-  @page{size:A4;margin:10mm 12mm}
+  @page{size:A4;margin:12mm 14mm}
   html,body{background:#fff!important}
   .adm-side,.adm-top,.adm-head,.adm-tabs,.adm-secnav,.adm-tabsel,.rp-bar,.adm-flash,.cms-chart__table,#adm-side,.adm-env{display:none!important}
   .adm-main,.us-main,.adm-tabs-form--side{display:block!important;padding:0!important;margin:0!important;max-width:none!important;grid-template-columns:none!important}
-  .rp-doc{box-shadow:none;border-radius:0;padding:0;max-width:none;margin:0;gap:7px;background:#fff;color:#111;--rp-ink:#111;--rp-muted:#555;--rp-line:#ddd;--rp-accent:#581D47}
-  .rp-mast{padding:4px 0}.rp-mast__name,.rp-mast__site{font-size:10px}.rp-mast__issue{font-size:9.5px}.rp-mast__issue b{font-size:9.5px}
-  .rp-headline{font-size:25px;max-width:none}
-  .rp-stand{font-size:11.5px;line-height:1.42;max-width:none}
-  .rp-figs{gap:0 14px}.rp-fig{padding-top:4px}.rp-fig__label,.rp-fig__chg{font-size:8.5px}.rp-fig__value{font-size:24px}
-  .rp-pull{padding-left:22px}.rp-pull::before{font-size:34px;top:-8px}.rp-pull p{font-size:13px;max-width:none}
-  .rp-grid{gap:7px 16px}
-  .rp-sec h3,.rp-tips h3{font-size:8.5px;margin-bottom:3px;padding-bottom:2px}
-  .rp-sec p{font-size:9.5px;line-height:1.38;margin-bottom:3px}
-  .rp-list{font-size:9.5px;gap:1px}
-  .rp-tips{padding:6px 10px;background:#f6eff4}.rp-tips ol{font-size:9.5px;gap:2px}
-  .rp-foot{font-size:8px;padding-top:4px}
-  .rp-sec,.rp-tips,.rp-figs,.rp-pull{break-inside:avoid}
-  .rp-sec .cms-chart__print{max-height:115px;width:auto;margin:0 auto}.rp-sec--verlauf .cms-chart__print{max-height:135px;width:100%;object-fit:contain}
+  .rp-doc{box-shadow:none;border-radius:0;padding:0;max-width:none;margin:0;gap:11px;background:#fff;color:#111;--rp-ink:#111;--rp-muted:#555;--rp-line:#ddd;--rp-accent:#7a2a5c}
+  .rp-mast{padding:5px 0}.rp-mast__name,.rp-mast__site{font-size:11px}.rp-mast__issue{font-size:10px}.rp-mast__issue b{font-size:10.5px}
+  .rp-headline{font-size:32px;max-width:none}
+  .rp-stand{font-size:14px;line-height:1.45;max-width:none}
+  .rp-figs{gap:0 16px}.rp-fig{padding-top:6px}.rp-fig__label,.rp-fig__chg{font-size:9.5px}.rp-fig__value{font-size:32px}
+  .rp-pull{padding-left:32px}.rp-pull::before{font-size:50px;top:-11px}.rp-pull p{font-size:17px;max-width:none}
+  .rp-grid,.rp-appendix__grid{gap:12px 22px}
+  .rp-grid--rest{break-before:page;margin-top:0}
+  .rp-sec h3,.rp-tips h3{font-size:9.5px;margin-bottom:4px;padding-bottom:3px}
+  .rp-sec p{font-size:11.5px;line-height:1.45;margin-bottom:4px}
+  .rp-list,.rp-num{font-size:11px}.rp-num th{font-size:8.5px}
+  .rp-tips{padding:10px 14px;background:#f6eff4}.rp-tips ol{font-size:11.5px;gap:3px}
+  .rp-appendix__h{font-size:17px;margin:4px 0 8px}
+  .rp-foot{font-size:9px;padding-top:6px}
+  .rp-sec,.rp-tips,.rp-figs,.rp-pull,.rp-num{break-inside:avoid}
+  .rp-sec .cms-chart__print{max-height:170px;width:auto;margin:0 auto}.rp-sec--verlauf .cms-chart__print{max-height:200px;width:100%;object-fit:contain}
 }

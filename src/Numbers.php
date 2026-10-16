@@ -99,6 +99,21 @@ final class Numbers
         return ['rows' => $rows, 'total' => count($list)];
     }
 
+    /**
+     * „Die Zahlen dazu“ im Bericht (Seite 2 von Druck und PDF): kompakte Tabellen – meistbesuchte Seiten, Herkunft, Kampagnen und Aktionen
+     * (die beiden letzten nur, wenn es welche gibt). @return list<array{dim: string, title: string, col: string, rows: list<array>}>
+     */
+    public static function appendix(array $cur, array $prev): array
+    {
+        $out = [];
+        foreach (['page' => 7, 'channel' => 6, 'campaign' => 5, 'event' => 6] as $dim => $n) {
+            $res = self::rows($cur, $prev, $dim, $n);
+            if (!$res['rows']) continue;
+            $out[] = ['dim' => $dim, 'title' => $dim === 'page' ? __('Meistbesuchte Seiten') : self::title($dim), 'col' => self::columns($dim)[0], 'rows' => $res['rows']];
+        }
+        return $out;
+    }
+
     /** Diagramm des Verlaufs einer Kennzahl (Tage) mit Vorzeitraum */
     public static function chart(array $cur, array $prev, string $m): array
     {

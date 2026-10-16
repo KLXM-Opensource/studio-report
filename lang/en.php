@@ -194,4 +194,7 @@ return [
     'neu' => 'new',
     'soziale Netzwerke bringen mehr' => 'social networks bring more',
     '{metric} je Tag im Vergleich zum Zeitraum davor' => '{metric} per day compared with the previous period',
+    'Die Zahlen dazu' => 'The numbers behind it',
+    'Meistbesuchte Seiten' => 'Most visited pages',
+    'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – höchstens zwei DIN-A4-Seiten je Zeitraum, dazu Zahlen zum Durchklicken.' => 'Count visitors without cookies and analyse them as an interpreted report: pages, sources, campaigns, devices, locations, events and goals – at most two A4 pages per period, plus numbers to click through.',
 ];

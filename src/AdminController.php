@@ -11,7 +11,7 @@ use Core\Http\Response;
 use Core\Theme;
 
 /**
- * Verwaltung → Report: Bericht (gedeutet, Magazin, eine DIN-A4-Seite, als PDF über Core\Pdf), Zahlen (klassische Statistik zum
+ * Verwaltung → Report: Bericht (gedeutet, Magazin, höchstens zwei DIN-A4-Seiten, als PDF über Core\Pdf), Zahlen (klassische Statistik zum
  * Durchklicken: Kennzahlen, Verlauf, Tabellen mit Filtern) und Einstellungen.
  */
 final class AdminController extends \Core\Http\Controllers\Admin\AdminController
@@ -87,7 +87,7 @@ final class AdminController extends \Core\Http\Controllers\Admin\AdminController
             if (count($charts) >= 8) break;
         }
         $report = (new Narrative($p['cur'], $p['prev']))->build();
-        $html = Theme::capture(dirname(__DIR__) . '/views/pdf/report.php', $p + ['report' => $report, 'charts' => $charts]);
+        $html = Theme::capture(dirname(__DIR__) . '/views/pdf/report.php', $p + ['report' => $report, 'charts' => $charts]);   // $p enthält cur und prev
         $bytes = \Core\Pdf::render($html, ['paper' => 'A4', 'title' => __('Report') . ' – ' . $report['kicker'],
             'footer' => site()->label() . ' · ' . __('Report') . ' · ' . $report['kicker']]);
         $name = 'Report-' . preg_replace('~[^A-Za-z0-9-]+~', '-', site()->key) . '-' . $p['from'] . '-' . $p['to'] . '.pdf';

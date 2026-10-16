@@ -1,7 +1,7 @@
 <?php
 /**
  * Verwaltung → Report → Bericht: gedeuteter Bericht für einen Zeitraum im Stil eines Magazins (Kopf mit Ausgabe, Schlagzeile, Vorspann,
- * große Kennzahlen, hervorgehobener Satz, Abschnitte in zwei Spalten, Tipps). Bildschirm wie Ausdruck: eine DIN-A4-Seite; als PDF
+ * große Kennzahlen, hervorgehobener Satz, Abschnitte in zwei Spalten, Tipps, „Die Zahlen dazu“). Ausdruck höchstens zwei DIN-A4-Seiten; als PDF
  * über Core\Pdf (views/pdf/report.php), sobald eine PDF-Engine installiert ist.
  * @var string $sel  @var string $from  @var string $to  @var string $pfrom  @var string $pto  @var array $filter  @var array $cur
  * @var array $report  (Narrative::build)  @var array $options (Dimensionen der letzten 30 Tage für die Filterauswahl)
@@ -9,6 +9,7 @@
 use Core\Charts;
 use Klxm\Report\Geo;
 use Klxm\Report\Narrative;
+use Klxm\Report\Numbers;
 
 $base = '/admin/report';
 include __DIR__ . '/_bar.php';
@@ -16,6 +17,7 @@ $geoUsed = !empty(array_filter(array_keys($cur['dims']['country'] ?? []), fn($k)
 $sections = $report['sections'];
 $course = null;
 foreach ($sections as $i => $s) if ($s['id'] === 'verlauf') { $course = $s; unset($sections[$i]); }
+$sections = array_values($sections);
 $chg = function (?float $p, ?bool $good): string {
     if ($p === null) return '';
     $a = abs($p);
@@ -53,8 +55,9 @@ $chg = function (?float $p, ?bool $good): string {
   <blockquote class="rp-pull"><p><?= e($report['highlight']) ?></p></blockquote>
   <?php endif; ?>
 
-  <div class="rp-grid">
-    <?php foreach ($sections as $s): ?>
+  <?php foreach (array_filter([array_slice($sections, 0, 2), array_slice($sections, 2)]) as $gi => $part): ?>
+  <div class="rp-grid<?= $gi ? ' rp-grid--rest' : '' ?>">
+    <?php foreach ($part as $s): ?>
     <section class="rp-sec rp-sec--<?= e($s['id']) ?>" aria-labelledby="rp-s-<?= e($s['id']) ?>" data-section="<?= e($s['id']) ?>">
       <h3 id="rp-s-<?= e($s['id']) ?>"><?= e($s['title']) ?></h3>
       <p><?php foreach ($s['text'] as $t): ?><?= e($t) ?> <?php endforeach; ?></p>
@@ -63,10 +66,26 @@ $chg = function (?float $p, ?bool $good): string {
     </section>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
 
   <?php if ($report['tips']): ?>
   <aside class="rp-tips" aria-labelledby="rp-tips-h"><h3 id="rp-tips-h"><?= e(__('Was Sie tun können')) ?></h3>
     <ol><?php foreach ($report['tips'] as $t): ?><li><?= e($t) ?></li><?php endforeach; ?></ol></aside>
+  <?php endif; ?>
+
+  <?php $appendix = Numbers::appendix($cur, $prev); $hasPrev = ($prev['dims']['total'][''][0] ?? 0) > 0; if ($appendix): ?>
+  <section class="rp-appendix" aria-labelledby="rp-app-h">
+    <h3 id="rp-app-h" class="rp-appendix__h"><?= e(__('Die Zahlen dazu')) ?></h3>
+    <div class="rp-appendix__grid">
+      <?php foreach ($appendix as $t): ?>
+      <table class="rp-num">
+        <thead><tr><th scope="col"><?= e($t['title']) ?></th><th scope="col"><?= e($t['col']) ?></th><th scope="col"><?= e(__('Anteil')) ?></th><?php if ($hasPrev): ?><th scope="col"><span class="adm-sr"><?= e(__('Veränderung')) ?></span>±</th><?php endif; ?></tr></thead>
+        <tbody><?php foreach ($t['rows'] as $r): ?><tr><td><?= e($r['label']) ?></td><td><?= e(fmt()->number($r['a'])) ?></td><td><?= e(fmt()->number($r['share'], $r['share'] < 10 ? 1 : 0)) ?> %</td>
+          <?php if ($hasPrev): ?><td><?= $r['change'] === null ? '<span class="rp-fig__chg is-flat">' . e(__('neu')) . '</span>' : $chg($r['change'], $r['change'] > 0) ?></td><?php endif; ?></tr><?php endforeach; ?></tbody>
+      </table>
+      <?php endforeach; ?>
+    </div>
+  </section>
   <?php endif; ?>
   <?php endif; ?>
 

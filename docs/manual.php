@@ -1,11 +1,11 @@
 <?php /** Handbuch · Kapitel „Report“ (Erweiterung report) */ ?>
-  <p class="lead">Der <b>Report</b> zeigt, wie Ihre Website genutzt wird – als kurzer Bericht in Worten auf einer Seite (was gut lief, woher die Besucher kamen, welche Kampagne etwas gebracht hat, was Sie tun können) und, für alle, die selbst nachsehen möchten, als <b>Zahlen</b> zum Durchklicken.</p>
+  <p class="lead">Der <b>Report</b> zeigt, wie Ihre Website genutzt wird – als kurzer Bericht in Worten (was gut lief, woher die Besucher kamen, welche Kampagne etwas gebracht hat, was Sie tun können) und, für alle, die selbst nachsehen möchten, als <b>Zahlen</b> zum Durchklicken.</p>
   <h3>Report ansehen</h3>
   <ul>
     <li>Menü <b>Report</b>: oben Zeitraum (letzte 7 oder 30 Tage, dieser oder letzter Monat, 90 Tage, dieses Jahr, eigener Zeitraum) und Filter (Seite, Herkunft, Kampagne, Gerät, Land).</li>
     <li>Der Bericht vergleicht immer mit dem gleich langen Zeitraum davor: „deutlich mehr (+23 %)“ heißt, dass es im Vergleich klar mehr waren.</li>
     <li>Der <b>Bericht</b> ist gesetzt wie eine Magazinseite: Schlagzeile, kurzer Vorspann, die wichtigsten Zahlen groß, ein hervorgehobener Satz und die Abschnitte Verlauf, Inhalte, Herkunft, Geräte, Standorte und Aktionen.</li>
-    <li><b>PDF herunterladen</b> erzeugt daraus eine DIN-A4-Seite als Datei – zum Ablegen oder Weitergeben, mit allen Diagrammen (hell, auch wenn die Verwaltung dunkel eingestellt ist). <b>Drucken</b> ergibt ebenfalls eine Seite. Der Knopf „PDF herunterladen“ erscheint, sobald auf dem Server die PDF-Engine installiert ist (Paket „PDF-Engine (dompdf)“).</li>
+    <li><b>PDF herunterladen</b> erzeugt daraus eine Datei mit höchstens zwei DIN-A4-Seiten – Seite 2 mit „Die Zahlen dazu“ (meistbesuchte Seiten, Herkunft, Kampagnen, Aktionen) – zum Ablegen oder Weitergeben, mit allen Diagrammen (hell, auch wenn die Verwaltung dunkel eingestellt ist). <b>Drucken</b> ergibt dieselben zwei Seiten. Der Knopf „PDF herunterladen“ erscheint, sobald auf dem Server die PDF-Engine installiert ist (Paket „PDF-Engine (dompdf)“).</li>
     <li>Filter gelten für die letzten 30 Tage; ältere Zeiträume liegen nur als Tagessummen vor.</li>
   </ul>
   <h3>Zahlen zum Durchklicken</h3>

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // KLXM Studio – Report. Copyright (C) 2026 KLXM and contributors (see LICENSE)
 /**
- * Erweiterung „report“: datensparsame Besucherauswertung ohne Cookies – ausgewertet als gedeuteter Bericht (eine DIN-A4-Seite)
+ * Erweiterung „report“: datensparsame Besucherauswertung ohne Cookies – ausgewertet als gedeuteter Bericht (höchstens zwei DIN-A4-Seiten)
  * statt klassischer Statistik-Ansicht. Seiten, Herkunft, Kampagnen, Geräte, Standorte (GeoIP, DB-IP Lite), Ereignisse und Ziele.
  * Standard aus (Funktion „report“). Doku: README.md, Entwicklerhandbuch → Report.
  */
@@ -25,7 +25,7 @@ return [
     'label' => 'Report – Besucher datensparsam auswerten',
     'version' => '0.2.0',
     'requires' => '>=1.0.0',
-    'description' => 'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – eine DIN-A4-Seite je Zeitraum.',
+    'description' => 'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – höchstens zwei DIN-A4-Seiten je Zeitraum, dazu Zahlen zum Durchklicken.',
     'author' => 'KLXM Crossmedia GmbH and contributors',
     'license' => 'MIT',
     'provides' => ['Menüpunkt „Report“ (Bericht, Zahlen, PDF, Einstellungen)', 'Karte „Report“ in der Übersicht', 'Datenquellen für den Block „Diagramm“', 'Zählung /_report', 'Rechte „Report ansehen“, „Report einstellen“'],
