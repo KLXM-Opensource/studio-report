@@ -95,6 +95,7 @@
 @media print{
   @page{size:A4;margin:12mm 14mm}
   html,body{background:#fff!important}
+  body.adm{display:block!important;min-height:0!important}   /* Raster der Seitenleiste aus – sonst setzt Safari den Bericht in die schmale erste Spalte */
   .adm-side,.adm-top,.adm-head,.adm-tabs,.adm-secnav,.adm-tabsel,.rp-bar,.adm-flash,.cms-chart__table,#adm-side,.adm-env{display:none!important}
   .adm-main,.us-main,.adm-tabs-form--side{display:block!important;padding:0!important;margin:0!important;max-width:none!important;grid-template-columns:none!important}
   .rp-doc{box-shadow:none;border-radius:0;padding:0;max-width:none;margin:0;gap:11px;background:#fff;color:#111;--rp-ink:#111;--rp-muted:#555;--rp-line:#ddd;--rp-accent:#7a2a5c}
