@@ -1,7 +1,8 @@
 <?php
 /**
  * Report als PDF (Core\Pdf, dompdf): gleiche Inhalte wie views/admin/report.php im Magazin-Stil, aber für dompdf gesetzt – CSS 2.1,
- * Spalten als Tabellen, Diagramme als PNG vom Browser (data:-URL, $charts[Abschnitt]). Schriften: PdfFont (Text), PdfDisplay (Titel).
+ * Spalten als Tabellen, Diagramme als PNG vom Browser (data:-URL, $charts[Abschnitt]). Schrift: Lato aus dem Kern (PdfFont) –
+ * Black für Schlagzeile und Rubriken, Light für große Zahlen und den hervorgehobenen Satz.
  * @var array $report  @var array $charts  @var string $from  @var string $to  @var string $pfrom  @var string $pto  @var array $filter  @var array $cur
  */
 use Klxm\Report\Narrative;
@@ -31,38 +32,43 @@ $section = function (array $s) use ($charts): string {
     }
     return $h;
 };
+$geo = !empty(array_filter(array_keys($cur['dims']['country'] ?? []), fn($k) => $k !== ''));
+$footHtml = '<div class="foot">' . e(__('Gezählt ohne Cookies und ohne Speicher im Browser; keine IP-Adressen gespeichert. Besucher werden je Tag gezählt.'))
+    . ($geo ? ' ' . e(__('Standorte ungefähr.')) . ' IP Geolocation by DB-IP (db-ip.com).' : '') . ' ' . e(__('Erstellt am {date}', ['date' => fmt()->date(time()) . ' ' . date('H:i')])) . '</div>';
 ?><!doctype html>
 <html lang="<?= e(substr((string) \Core\I18n::locale(), 0, 2) ?: 'de') ?>"><head><meta charset="utf-8"><title><?= e(__('Report')) ?></title>
 <style>
-@page{margin:13mm 15mm 15mm}
-body{font-size:8.8pt;line-height:11.2pt;color:#1d2125}
-h1,h2,.serif{font-family:"PdfDisplay","DejaVu Serif",serif}
+@page{margin:11mm 15mm 13mm}
+body{font-size:8.7pt;line-height:10.8pt;color:#1d2125}
 .mast{border-top:2.5pt solid #1d2125;border-bottom:.6pt solid #cfd3d8;width:100%;border-collapse:collapse;margin-bottom:6pt}
 .mast td{padding:3pt 0;vertical-align:baseline;line-height:12pt}
-.brand{font-weight:bold;letter-spacing:2pt;text-transform:uppercase;font-size:8.6pt}
+.brand{font-weight:900;letter-spacing:2.4pt;text-transform:uppercase;font-size:8.6pt}
 .site{color:#5d6670;font-size:8.6pt;padding-left:6pt}
 .issue{text-align:right;color:#5d6670;font-size:8.2pt}
-.issue b{color:#1d2125;font-family:"PdfDisplay","DejaVu Serif",serif;font-size:10.5pt}
-h1{font-size:21pt;line-height:23pt;margin:5pt 0 5pt;font-weight:bold}
-.stand{font-size:10.6pt;line-height:13.6pt;margin:0 0 7pt}
+.issue b{color:#1d2125;font-weight:700;letter-spacing:.6pt;text-transform:uppercase;font-size:8.6pt}
+h1{font-size:24pt;line-height:25pt;margin:5pt 0 6pt;font-weight:900;letter-spacing:-.4pt}
+.stand{font-size:10.6pt;line-height:13.6pt;margin:0 0 7pt;font-weight:300}
 .figs{width:100%;border-collapse:separate;border-spacing:10pt 0;margin:0 -10pt 6pt}
 .figs td{border-top:.9pt solid #1d2125;padding-top:5pt;vertical-align:top;width:25%}
-.label{font-size:7pt;letter-spacing:.8pt;text-transform:uppercase;color:#5d6670;font-weight:bold}
-.value{font-family:"PdfDisplay","DejaVu Serif",serif;font-size:18pt;font-weight:bold;line-height:21pt}
+.label{font-size:6.8pt;letter-spacing:1.1pt;text-transform:uppercase;color:#5d6670;font-weight:700}
+.value{font-size:24pt;font-weight:300;line-height:27pt;letter-spacing:-.4pt}
 .chg{font-size:8pt;font-weight:bold}.up{color:#1A7240}.down{color:#B42318}.flat{color:#5d6670}
-h3{font-size:7.4pt;letter-spacing:1.2pt;text-transform:uppercase;color:#7a2a5c;margin:0 0 4pt;padding-bottom:2pt;border-bottom:.6pt solid #cfd3d8}
+h3{font-size:7.2pt;letter-spacing:1.6pt;text-transform:uppercase;color:#7a2a5c;margin:0 0 4pt;padding-bottom:2pt;border-bottom:.6pt solid #cfd3d8;font-weight:900}
 p{margin:0 0 3pt}
-.pull{border-left:2.4pt solid #7a2a5c;padding:1pt 0 1pt 9pt;margin:2pt 0 7pt;font-family:"PdfDisplay","DejaVu Serif",serif;font-style:italic;font-size:11.5pt;line-height:14.5pt}
+.pull{margin:2pt 0 6pt}
+.pull td{vertical-align:top}
+.pull .q{width:26pt;font-weight:900;font-size:36pt;line-height:30pt;color:#7a2a5c}
+.pull .t{font-weight:300;font-style:italic;font-size:13pt;line-height:16.5pt}
 .cols{width:100%;border-collapse:separate;border-spacing:14pt 0;margin:0 -14pt}
-.cols td{width:50%;vertical-align:top;padding-bottom:6pt}
-img.chart{height:92pt;width:auto;margin:1pt 0}
-.course img.chart{height:108pt;width:auto}
+.cols td{width:50%;vertical-align:top;padding-bottom:4pt}
+img.chart{height:76pt;width:auto;margin:1pt 0}
+.course img.chart{height:96pt;width:auto}
 .course{margin-bottom:4pt}
 .list{width:100%;border-collapse:collapse;font-size:8.2pt}
 .list td{border-bottom:.5pt solid #e1e4e8;padding:1pt 0}.num{text-align:right;font-weight:bold}
 .tips{background:#f6eff4;padding:6pt 9pt;margin-top:2pt}
 .tips ol{margin:0;padding-left:14pt}.tips li{margin-bottom:2pt}
-.foot{margin-top:6pt;padding-top:4pt;border-top:.6pt solid #cfd3d8;font-size:7pt;color:#5d6670}
+.foot{margin-top:4pt;padding-top:4pt;border-top:.6pt solid #cfd3d8;font-size:7pt;color:#5d6670}
 .section,.figs,.pull,.tips{page-break-inside:avoid}
 </style></head>
 <body>
@@ -82,18 +88,16 @@ img.chart{height:92pt;width:auto;margin:1pt 0}
 </tr></table>
 
 <?php if ($course): ?><div class="section course"><?= $section($course) ?></div><?php endif; ?>
-<?php if ($report['highlight']): ?><div class="pull"><?= e($report['highlight']) ?></div><?php endif; ?>
+<?php if ($report['highlight']): ?><table class="pull"><tr><td class="q">&#8222;</td><td class="t"><?= e($report['highlight']) ?></td></tr></table><?php endif; ?>
 
 <table class="cols">
   <?php foreach ($pairs as $pair): ?>
-  <tr><?php foreach ($pair as $s): ?><td class="section"><?= $section($s) ?></td><?php endforeach; ?><?php if (count($pair) === 1): ?><td class="section"><?= $tipsInGrid ? $tipsHtml : '' ?></td><?php endif; ?></tr>
+  <tr><?php foreach ($pair as $s): ?><td class="section"><?= $section($s) ?></td><?php endforeach; ?><?php if (count($pair) === 1): ?><td class="section"><?php if ($tipsInGrid): ?><?= $tipsHtml ?><?= $footHtml ?><?php endif; ?></td><?php endif; ?></tr>
   <?php endforeach; ?>
 </table>
 
 <?php if (!$tipsInGrid): ?><?= $tipsHtml ?><?php endif; ?>
 <?php endif; ?>
 
-<div class="foot"><?= e(__('Gezählt ohne Cookies und ohne Speicher im Browser; keine IP-Adressen gespeichert. Besucher werden je Tag gezählt.')) ?>
-  <?php if (!empty(array_filter(array_keys($cur['dims']['country'] ?? []), fn($k) => $k !== ''))): ?> <?= e(__('Standorte ungefähr.')) ?> IP Geolocation by DB-IP (db-ip.com).<?php endif; ?>
-  <?= e(__('Erstellt am {date}', ['date' => fmt()->date(time()) . ' ' . date('H:i')])) ?></div>
+<?php if (!$tipsInGrid): ?><?= $footHtml ?><?php endif; ?>
 </body></html>
