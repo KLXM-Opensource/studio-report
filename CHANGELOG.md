@@ -2,7 +2,7 @@
 
 ## 0.2.0
 
-- Bericht im Stil eines Magazins, ganz in Lato (Black für Schlagzeile und Rubriken, Light für Zahlen und Zitat): Ausgabe („Oktober 2026“), Schlagzeile nach festen Regeln („Deutlich mehr Besucher – Kampagnen wirken“), Vorspann, große Kennzahlen, hervorgehobener Satz, Abschnitte in zwei Spalten, nummerierte Tipps und „Die Zahlen dazu“ (kompakte Tabellen). Druck und PDF auf höchstens zwei DIN-A4-Seiten.
+- Bericht im Stil eines Magazins, ganz in Lato (Black für Schlagzeile und Rubriken, Light für Zahlen und Zitat): Ausgabe („Oktober 2026“), Schlagzeile nach festen Regeln („Deutlich mehr Besucher – Kampagnen wirken“), Vorspann, große Kennzahlen, hervorgehobener Satz, Abschnitte in zwei Spalten, nummerierte Tipps und „Die Zahlen dazu“ (kompakte Tabellen). Druck und PDF auf höchstens zwei DIN-A4-Seiten. Das PDF ist gesetzt wie eine kleine Zeitung: Zeitungskopf mit Ausgabe, große Leitzahl, Zitat, Seite 2 „Im Detail“ mit Tipps im dunklen Kasten und „Die Zahlen dazu“, Seitenzahlen.
 - **PDF herunterladen** über `Core\Pdf` (Paket `klxm/studio-pdf`): eine A4-Seite mit allen Diagrammen in heller Fassung.
 - **Zahlen**: klassische Statistik zum Durchklicken – sechs Kennzahlen (Klick zeigt den Verlauf), Tabellen für Seiten, Einstiegsseiten, Herkunft, Verweise, Kampagnen, Geräte, Browser, Systeme, Sprachen, Länder, Regionen, Städte und Aktionen mit Anteil und Veränderung; Klick auf eine Zeile filtert.
 - Geplante Aufgaben über den Kern (`Core\Cron`, Manifest `schedule`).

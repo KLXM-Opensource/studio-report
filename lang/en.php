@@ -197,4 +197,10 @@ return [
     'Die Zahlen dazu' => 'The numbers behind it',
     'Meistbesuchte Seiten' => 'Most visited pages',
     'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – höchstens zwei DIN-A4-Seiten je Zeitraum, dazu Zahlen zum Durchklicken.' => 'Count visitors without cookies and analyse them as an interpreted report: pages, sources, campaigns, devices, locations, events and goals – at most two A4 pages per period, plus numbers to click through.',
+    'Ausgabe' => 'Issue',
+    'Besucherbericht' => 'Visitor report',
+    'Im Detail' => 'In detail',
+    'So wird gezählt' => 'How we count',
+    'gegenüber dem Zeitraum davor' => 'compared with the previous period',
+    'ohne Cookies gezählt' => 'counted without cookies',
 ];

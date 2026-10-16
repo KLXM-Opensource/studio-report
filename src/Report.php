@@ -167,6 +167,16 @@ final class Report
         };
     }
 
+    /** Name der Website für Kopf und PDF: Organisation bzw. Kurzname aus den Einstellungen, sonst Name/Domain der Website */
+    public static function siteName(): string
+    {
+        foreach (['org_name', 'short_name', 'sys.pwa_name'] as $k) {
+            $v = trim((string) (app()->settings->get($k, '') ?? ''));
+            if ($v !== '') return $v;
+        }
+        return site()->label();
+    }
+
     public static function countryName(string $code): string
     {
         if ($code === '') return self::t('Unbekannt');

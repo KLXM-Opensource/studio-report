@@ -27,7 +27,7 @@ $chg = function (?float $p, ?bool $good): string {
 ?>
 <article class="rp-doc rp-mag" aria-labelledby="rp-h" data-report-doc>
   <header class="rp-mast">
-    <p class="rp-mast__brand"><span class="rp-mast__name"><?= e(__('Report')) ?></span> <span class="rp-mast__site"><?= e(site()->label()) ?></span></p>
+    <p class="rp-mast__brand"><span class="rp-mast__name"><?= e(__('Report')) ?></span> <span class="rp-mast__site"><?= e(\Klxm\Report\Report::siteName()) ?></span></p>
     <p class="rp-mast__issue"><b><?= e($report['kicker']) ?></b>
       <span><?= e(__('Vergleich mit {range}', ['range' => Narrative::rangeLabel($pfrom, $pto)])) ?></span>
       <?php foreach ($chips as $c): ?><span class="rp-chip"><?= e($c) ?></span><?php endforeach; ?></p>

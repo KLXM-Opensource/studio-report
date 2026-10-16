@@ -89,7 +89,7 @@ final class AdminController extends \Core\Http\Controllers\Admin\AdminController
         $report = (new Narrative($p['cur'], $p['prev']))->build();
         $html = Theme::capture(dirname(__DIR__) . '/views/pdf/report.php', $p + ['report' => $report, 'charts' => $charts]);   // $p enthält cur und prev
         $bytes = \Core\Pdf::render($html, ['paper' => 'A4', 'title' => __('Report') . ' – ' . $report['kicker'],
-            'footer' => site()->label() . ' · ' . __('Report') . ' · ' . $report['kicker']]);
+            'footer' => Report::siteName() . ' · ' . __('Report') . ' · ' . $report['kicker'], 'pages' => true]);
         $name = 'Report-' . preg_replace('~[^A-Za-z0-9-]+~', '-', site()->key) . '-' . $p['from'] . '-' . $p['to'] . '.pdf';
         return self::secure(\Core\Pdf::response($bytes, $name));
     }
