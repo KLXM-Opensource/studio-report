@@ -1,5 +1,9 @@
 # Changelog – Report
 
+## 0.2.2
+
+- Automatisierte Browser (Playwright, Puppeteer, Selenium, KI-Crawler mit gewöhnlicher Browserkennung) zählen nicht mehr: das Skript meldet nichts, wenn `navigator.webdriver` gesetzt ist.
+
 ## 0.2.1
 
 - Sicherheit: Zählung nur von der eigenen Website (`Sec-Fetch-Site`), höchstens 600 Aufrufe je Anschluss und Stunde (IP nur als HMAC – eine wechselnde Browserkennung umgeht die Grenze nicht mehr) und 200.000 je Website und Tag.

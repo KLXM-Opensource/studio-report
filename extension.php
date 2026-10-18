@@ -23,7 +23,7 @@ use Klxm\Report\Report;
 return [
     'name' => 'report',
     'label' => 'Report – Besucher datensparsam auswerten',
-    'version' => '0.2.1',
+    'version' => '0.2.2',
     'requires' => '>=1.0.0',
     'description' => 'Besucher ohne Cookies zählen und als gedeuteten Bericht auswerten: Seiten, Herkunft, Kampagnen, Geräte, Standorte, Ereignisse und Ziele – höchstens zwei DIN-A4-Seiten je Zeitraum, dazu Zahlen zum Durchklicken.',
     'author' => 'KLXM Crossmedia GmbH and contributors',

@@ -18,7 +18,7 @@
   <ul>
     <li>Gezählt werden Seitenaufrufe, Besuche und Besucher (je Tag), Herkunft (Suchmaschine, direkt, soziale Netzwerke, andere Websites, Kampagnen), Gerät, Browser, System, Sprache und ungefähr der Standort (Land, Bundesland, Stadt).</li>
     <li><b>Ohne Cookies</b> und ohne Speicher im Browser. IP-Adressen werden nicht gespeichert. Ein Besucher ist nur innerhalb eines Tages wiederzuerkennen, nie über mehrere Tage.</li>
-    <li>Nicht gezählt: angemeldete Personen (die Redaktion), Suchmaschinen-Roboter und – wenn eingestellt – Besucher mit „Do Not Track“.</li>
+    <li>Nicht gezählt: angemeldete Personen (die Redaktion), Suchmaschinen-Roboter, automatisierte Browser (z. B. Test- und Crawler-Programme) und – wenn eingestellt – Besucher mit „Do Not Track“.</li>
     <li>Städte sind ungefähr: Im Mobilfunk erscheint oft der Ort des Netzknotens.</li>
   </ul>
   <h3>Aktionen und Kampagnen</h3>

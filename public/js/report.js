@@ -4,6 +4,9 @@
 (() => {
   const me = document.currentScript, ep = me && me.dataset.endpoint;
   if (!ep || (me.dataset.dnt && (navigator.doNotTrack === '1' || navigator.globalPrivacyControl))) return;
+  // Automatisierte Browser (Playwright, Puppeteer, Selenium, KI-Crawler mit echtem Chrome) geben sich oft als normaler Browser aus –
+  // navigator.webdriver verraten sie trotzdem: nicht zählen (die Kennung prüft der Server zusätzlich, Report::isBot)
+  if (navigator.webdriver) return;
   const send = (o) => {
     const b = JSON.stringify(o);
     try { if (navigator.sendBeacon && navigator.sendBeacon(ep, new Blob([b], { type: 'text/plain' }))) return; } catch (e) {}
